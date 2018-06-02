@@ -17,10 +17,67 @@
 				<a href="#" class="tb">挨踢1024</a>
 				<a href="#" class="tb">你问我答</a>
 			</div>
+			{% if not request.session.is_login %}
 			<div class="action-nav">
 				<a href="#" class="tb">注册</a>
 				<a href="#" class="tb">登录</a>
 			</div>
+
+			{% else %}
+			<style>
+				.dropbtn {
+					background-color: #2459a2;
+					color: white;
+					padding: 8px;
+					font-size: 12px;
+					border: none;
+					cursor: pointer;
+					height: 44px;
+					width: 100px;
+				}
+			
+				.dropdown {
+					position: relative;
+					display: inline-block;
+					margin-left: 200px;
+				}
+			
+				.dropdown-content {
+					display: none;
+					position: absolute;
+					background-color: #f9f9f9;
+					min-width: 100px;
+					box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+				}
+			
+				.dropdown-content a {
+					color: black;
+					padding: 5px 10px;
+					text-decoration: none;
+					display: block;
+				}
+			
+				.dropdown-content a:hover {
+					background-color: #f1f1f1
+				}
+			
+				.dropdown:hover .dropdown-content {
+					display: block;
+				}
+			
+				.dropdown:hover .dropbtn {
+					background-color: #3e8e41;
+				}
+			</style>
+				<div class="dropdown">
+					<button class="dropbtn">童话与海</button>
+					<div class="dropdown-content">
+						<a href="#">我的收藏</a>
+						<a href="#">我的钱包</a>
+						<a href="{% url 'logout' %}">退出</a>
+					</div>
+				</div>
+			{% endif %}
 			<div class="key-sera">
 				<form action="#">
 					<input type="text" class="search-txt-s">
@@ -217,6 +274,13 @@
 			cursor: not-allowed;
 			background-color: #a3a3a1;
 		}
+		.box-mobilelogin img{
+			width: 100px;
+			height: 40;
+			position: absolute;
+			right: 0px;
+			margin-top: 1px;
+		}
 	</style>
 	<div class='module-login-mask hide'>
 		<div class="module-login-container">
@@ -225,28 +289,23 @@
 					<div class="header box-active" style="border-radius: 5px 0 0 0;">登录</div>
 					<div class="body-login" style="border-radius:0 0 0 5px;">
 						<div class="tab-box">
-							<span class="tab-mobilelogin active" style="margin-right:10px;">手机号登录</span>|<span class="tab-idlogin" style="margin-left:10px;">用户名登录</span>
+							<span class="tab-mobilelogin active" style="margin-right:10px;">邮箱或用户名登录</span>
 						</div>
 						<div class="box-mobilelogin">
-							<div class="err-msg"></div>
+							<div id="login_err_msg" class="err-msg"></div>
 							<form class="form-mobilelogin" action="#" autocomplete="on">
-								<div class="pr"><input type="text" name="mobile" id="mobile" placeholder="请输入用户名或邮箱" class="mobile" tabindex="1"></div>
+								<div class="pr"><input type="text" name="username" id="mobile" placeholder="请输入用户名或邮箱" class="mobile" tabindex="1"></div>
 								<div class="pr"><input type="password" name="password" id="mbpwd" placeholder="请输入密码" class="mbpwd" tabindex="2"></div>
-								<div class="pr"><input type="text" name="yzm" id="yzm" placeholder="请输入验证码" class="yzm" tabindex="3"></div>
-							</form>
-						</div>
-						<div class="box-idlogin" style="display:none">
-							<div class="err-msg"></div>
-							<form class="form-idlogin" action="#" autocomplete="on">
-								<div class="pr"><input type="text" name="userid" id="userid" placeholder="用户名" class="userid" tabindex="1"></div>
-								<div class="pr"><input type="password" name="pwd" id="pwd" placeholder="密码" class="pwd" tabindex="2"></div>
+								<div class="pr"><input type="text" name="code" id="yzm" placeholder="请输入验证码" class="yzm" tabindex="3">
+									<img src="{% url 'check_code'%}" alt="验证码" class="img-code">
+								</div>
 							</form>
 						</div>
 						<div class="box-btn">
 							<div><span><input type="checkbox" class="keeplogin" value="1" checked />一个月内自动登录</span><span class="fgtpwd"><a href="#">忘记密码?</a></span></div>
 							<div>
 								<div class="btn btn-login pub-icons pub-btn pub-btn-valid">
-									<span>登录</span>
+									<span class='span-login'>登录</span>
 									<span style="display:none;">
 										<img src="#" alt="zzdl"> 正在登录</span>
 								</div>
@@ -265,16 +324,19 @@
 				<div class="box-register-mobile">
 					<div id="zc_err_msg" class="err-msg"></div>
 					<div>
-						<div class="pr"><input type="text" placeholder="请输入用户名"></div>
-						<div class="pr"><input id="email" type="text" placeholder="请输入邮箱"></div>
-						<div class="pr"><input type="text" style="width:105px;" placeholder="请输入邮箱验证码">
-							
-								<span id="sendMsg" class="sendMsg">获取验证码</span>
+						<form id="register">
+						<div class="pr"><input type="text" placeholder="请输入用户名" name="username"></div>
+						<div class="pr"><input id="email" type="text" placeholder="请输入邮箱" name="email"></div>
+						<div class="pr"><input type="text" style="width:105px;" placeholder="请输入邮箱验证码" name="code">
+								<span id="sendMsg" class="sendMsg">
+									<a href="javasctipt:void(0)" style="color:white;">获取验证码</a>
+								</span>
 						</div>
-						<div class="pr"><input type="password" placeholder="请输入密码"></div>
+						<div class="pr"><input type="password" placeholder="请输入密码" name="password"></div>
 						<div class="btn btn-login pub-icons pub-btn pub-btn-valid">
-							<span>注册</span>
+							<span id="btn_register">注册</span>
 						</div>
+					</form>
 					</div>
 				</div>
 			</div>
@@ -283,30 +345,33 @@
 	<script src="/static/jquery-3.3.1.js"></script>
 	<script>
 		 $(
-			 function(){
+			function(){
 				bindlogin();
 				bindClose();
 				bindSendMsg();
-			 }
+				bindRegister();
+				bindCheck_code();
+				bindUserlogin();
+			}
 		 );
-		 function bindlogin(){
+		function bindlogin(){
 			$(".action-nav").click(
 				function(){
 					$(".module-login-mask").removeClass("hide");
 				}
 			)
-		 };
-		 function bindClose(){
+		};
+		function bindClose(){
 			 $("#close").click(
 				 function(){
-					 $(".module-login-mask").addClass("hide");
-				 }
-			 )
-		 };
-		 function bindSendMsg(){
+					$(".module-login-mask").addClass("hide");
+				}
+			)
+		};
+		function bindSendMsg(){
 			 $("#sendMsg").click(
 				 function(){
-					 $("#zc_err_msg").empty();
+					$("#zc_err_msg").empty();
 
 					var email = $("#email").val();
 					if(email.trim().length == 0){
@@ -319,29 +384,74 @@
 					}
 					var ths = $(this);
 					var time = 60;
-
 					$.ajax({
 						url: '{% url "sendMsg" %}',
 						type: 'POST',
 						data: {email:email},
 						dataType: 'JSON',
 						success: function(args){
-							console.log(args);
-							ths.addClass("sending");
+							if (args.status){
+								ths.addClass("sending");
 							var iterval = setInterval(function(){
 								ths.text("已发送("+time+")");
 								time -= 1;
-								if(time <=0 ){
+								if(time <= 0){
 									clearInterval(iterval);
 									ths.removeClass('sending');
 									ths.text("获取验证码");
 								}
 							}, 1000);
+							}else{
+								$("#zc_err_msg").text(args.summary);
+							}
 						},
 					});
-				 }
-			 )
-		 }
+				}
+			)
+		};
+ 		function bindRegister(){
+			$("#btn_register").click(
+				function (){
+					$.ajax({
+						url: '{% url "register" %}',
+						data: $("#register").serialize(),
+						type: "POST",
+						dataType: "JSON",
+						success: function(args){
+							console.log(args);
+						}
+					})
+				}
+			)
+		 };
+		function bindCheck_code(){
+			$(".img-code").click(
+				function(){
+					this.src = this.src+'?'
+				}
+			)
+		};
+		function bindUserlogin(){
+			$(".span-login").click(
+				function (){
+					$.ajax({
+						url: "{% url 'login' %}",
+						data: $(".form-mobilelogin").serialize(),
+						type: 'POST',
+						dataType: 'JSON',
+						success: function (args) {
+							console.log(args)
+							if (args.status){
+								console.log(args);
+								location.reload();
+							}else{
+								$("#login_err_msg").text(args.summary)
+							}
+						}
+					})
+				}
+			)
+		};
 	</script>
 </body>
 </html>

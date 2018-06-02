@@ -22,4 +22,8 @@ urlpatterns = [
 
     path('index/', user_views.index, name="index"),
     path('sendMsg/', user_views.sendMsg, name="sendMsg"),
+    path('register/', user_views.register, name="register"),
+    path('login/', user_views.login, name="login"),
+    path('check_code/', user_views.check_code, name="check_code"),
+    path('logout/', user_views.logout, name='logout')
 ]

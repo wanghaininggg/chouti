@@ -25,7 +25,7 @@ SECRET_KEY = 'w)(*!p=7%t8@ui&-pfylhp2-(l_!$psaw)7r9t%v@$*l)r1_ma'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -104,9 +104,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -123,3 +123,11 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.qq.com'  # 如果是 163 改成 smtp.163.com
+EMAIL_PORT = 465
+EMAIL_HOST_USER = '946085650@qq.com'  # 帐号
+EMAIL_HOST_PASSWORD = 'nfolrkmzwlyzbebb'  # 密码
+EMAIL_FORM = '946085650@qq.com'
+DEFAULT_FROM_EMAIL = '王海宁<946085650@qq.com>'

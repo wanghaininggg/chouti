@@ -9,6 +9,6 @@ class UserInfo(models.Model):
 
 class SendMsg(models.Model):
     email = models.CharField(max_length=32, unique=True)
-    code = models.CharField(max_length=6)
+    code = models.CharField(max_length=4)
     stime = models.DateTimeField()
-    times = models.IntegerField()
+    times = models.IntegerField(default=1)
